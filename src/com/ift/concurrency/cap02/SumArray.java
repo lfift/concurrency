@@ -53,6 +53,5 @@ public class SumArray {
         Integer count = workTask.join();
         long endTime = System.currentTimeMillis();
         System.out.println("result is " + count + " used " + (endTime - startTime) + " ms.");
-
     }
 }
