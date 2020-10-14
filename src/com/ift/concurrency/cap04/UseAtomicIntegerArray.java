@@ -1,7 +1,6 @@
 package com.ift.concurrency.cap04;
 
 import java.util.concurrent.atomic.AtomicIntegerArray;
-import java.util.concurrent.atomic.AtomicReferenceArray;
 
 /**
  * @author liufei
@@ -13,6 +12,7 @@ public class UseAtomicIntegerArray {
     private static final AtomicIntegerArray aia = new AtomicIntegerArray(arr);
 
     public static void main(String[] args) {
-
+        aia.compareAndSet(0, 1, 3);
+        System.out.println(aia.get(0));
     }
 }

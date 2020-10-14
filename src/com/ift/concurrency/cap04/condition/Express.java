@@ -1,10 +1,19 @@
-package com.ift.concurrency.cap02;
+package com.ift.concurrency.cap04.condition;
+
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author liufei
  * @date 2020/10/11
  */
 public class Express {
+
+    private Lock kmLock = new ReentrantLock();
+    private Lock siteLock = new ReentrantLock();
+    private Condition kmCondition = kmLock.newCondition();
+    private Condition siteCondition = siteLock.newCondition();
 
     public static final String CITY = "ChongQing";
     private int km;
@@ -31,40 +40,60 @@ public class Express {
         this.site = site;
     }
 
-    public synchronized void changeKm() {
-        this.km = 101;
-        notifyAll();
-    }
-
-    public synchronized void changeSite() {
-        this.site = "ShangHai";
-        notifyAll();
-    }
-
-    public synchronized void waitKm() {
-        while (this.km < 100) {
-            try {
-                wait();
-                System.out.println("check km thread ["
-                        + Thread.currentThread().getId()  + "] is not be notified");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+    public void changeKm() {
+        kmLock.lock();
+        try {
+            this.km = 101;
+            kmCondition.signalAll();
+        } finally {
+            kmLock.unlock();
         }
-        System.out.println("the km is " + this.km + " i will running");
     }
 
-    public synchronized void waitSite() {
-        while (CITY.equals(this.site)) {
-            try {
-                wait();
-                System.out.println("check site thread ["
-                        + Thread.currentThread().getId() + "] is not be notified");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+    public void changeSite() {
+        siteLock.lock();
+        try{
+            this.site = "ShangHai";
+            siteCondition.signal();
+        } finally {
+            siteLock.unlock();
         }
-        System.out.println("the site is " + this.site + " i will running");
+    }
+
+    public void waitKm() {
+        kmLock.lock();
+        try {
+            while (this.km < 100) {
+                try {
+                    kmCondition.await();
+                    System.out.println("check km thread ["
+                            + Thread.currentThread().getId()  + "] is be notified");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("the km is " + this.km + " i will running");
+        } finally {
+            kmLock.unlock();
+        }
+    }
+
+    public void waitSite() {
+        siteLock.lock();
+        try {
+            while (CITY.equals(this.site)) {
+                try {
+                    siteCondition.await();
+                    System.out.println("check site thread ["
+                            + Thread.currentThread().getId() + "] is be notified");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("the site is " + this.site + " i will running");
+        } finally {
+            siteLock.unlock();
+        }
     }
 
 }

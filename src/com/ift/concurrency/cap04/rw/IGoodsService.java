@@ -5,4 +5,8 @@ package com.ift.concurrency.cap04.rw;
  * @date 2020/10/14
  */
 public interface IGoodsService {
+
+    int getNum() throws InterruptedException;
+
+    void setNum(int sealNum) throws InterruptedException;
 }

@@ -1,4 +1,4 @@
-package com.ift.concurrency.cap02;
+package com.ift.concurrency.cap04.condition;
 
 import java.util.concurrent.TimeUnit;
 

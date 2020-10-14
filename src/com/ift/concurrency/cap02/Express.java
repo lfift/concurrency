@@ -46,7 +46,7 @@ public class Express {
             try {
                 wait();
                 System.out.println("check km thread ["
-                        + Thread.currentThread().getId()  + "] is not be notified");
+                        + Thread.currentThread().getId()  + "] is be notified");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -59,7 +59,7 @@ public class Express {
             try {
                 wait();
                 System.out.println("check site thread ["
-                        + Thread.currentThread().getId() + "] is not be notified");
+                        + Thread.currentThread().getId() + "] is be notified");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
